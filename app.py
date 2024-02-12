@@ -16,7 +16,7 @@ def get_nonempty_input(fieldname, is_password=False):
         else:
             user_input = input(prompt)
         if user_input.strip():  # Check if the input is not empty after stripping whitespace
-            return user_input
+            return user_input.strip()
         else:
             print(f'{fieldname} får inte vara tom.')
 
@@ -54,10 +54,19 @@ if __name__ == "__main__":
                 username = get_nonempty_input("användarnamn")
                 password = get_nonempty_input("lösenord",is_password=True)
                 if user_exists(username,password):
-                    print("Autentisering misslyckades! Försök igen!")
+                    print(f'Inloggad som {username}: ')
+                    usermenu = input("""Välj ett alternative:
+                                1. Posta Meddelande 
+                                2. Söka Meddelende 
+                                3. Logga ut \n """)
+                    if usermenu == '1':
+                        pass
+                    if usermenu == '2':
+                        pass
+                    if usermenu == '3':
+                        break
                 else:
-                    print("Autentisering lyckades!")
-                    break
+                    print("Autentisering misslyckades! Försök igen!")
         elif menu == '3':
             break
         else:
