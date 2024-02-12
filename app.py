@@ -41,7 +41,7 @@ if(__name__ == "__main__"):
                     print("Användarnamnet är redan upptaget. Välj en annan.")
                 else:
                     break
-            password = get_nonempty_input("lösenord")
+            password = get_nonempty_input("lösenord",is_password=True)
             address = input("Ange ditt adress: ")
             telephone = input("Ange ditt telefonnummer: ")
 
