@@ -1,12 +1,6 @@
 from sqlite_commands import prepare_relational_database
 
 
-
-
-
-
-
-
 if(__name__ == "__main__"):
     prepare_relational_database()
     while True:
