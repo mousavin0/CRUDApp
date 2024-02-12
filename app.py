@@ -1,6 +1,4 @@
-def prepare_relational_database():
-    pass
-
+from sqlite_commands import prepare_relational_database
 
 
 
