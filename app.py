@@ -12,6 +12,8 @@ import os
 import csv
 
 from openpyxl import Workbook
+from datetime import datetime
+
 
 
 
@@ -37,10 +39,10 @@ def login():
         username = get_nonempty_input("användarnamn")
         password = get_nonempty_input("lösenord",is_password=True)
         if user_exists(username,password):
-            with open(login_log_file,'a') as fd:
-                fd.write()
-
-
+            with open(login_log_file,'a') as f:    
+                writer = csv.writer(f)
+                dt=datetime.now()
+                writer.writerow([username,dt.year,dt.month,dt.day,dt.hour,dt.minute,dt.second])
             print(f'Inloggad som {username}: ')
             usermenu = input("""Välj ett alternative:
                         1. Posta Meddelande 

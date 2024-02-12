@@ -1,4 +1,6 @@
 users_data.db
+login_history.xlsx
+user_login.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
