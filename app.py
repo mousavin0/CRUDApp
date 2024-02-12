@@ -45,10 +45,9 @@ if(__name__ == "__main__"):
             address = input("Ange ditt adress: ")
             telephone = input("Ange ditt telefonnummer: ")
 
-            print("Användare tillagd!" + firstname)
-
-            # password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-            # add_user(firstname,lastname,username,password_hash,address,telephone)
+            password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            add_user(firstname,lastname,username,password_hash,address,telephone)
+            
         elif (menu == '2'):
             pass
         elif (menu == '3'):
