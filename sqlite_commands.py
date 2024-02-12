@@ -5,13 +5,19 @@ def prepare_relational_database():
     cursor = conn.cursor()
     cursor.execute("""CREATE TABLE IF NOT EXISTS users (
                    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                   firstname TEXT,
-                   lastname TEXT,
-                   username TEXT UNIQUE,
-                   password_hash TEXT,
+                   firstname TEXT NOT NULL,
+                   lastname TEXT NOT NULL,
+                   username TEXT UNIQUE NOT NULL,
+                   password_hash TEXT NOT NULL,
                    address TEXT,
                    telephone TEXT )""")
     conn.commit()
     cursor.close()
     conn.close()
+
+def add_user():
+    pass
+
+def is_username_unique(username):
+    return True
 
