@@ -44,21 +44,38 @@ def login():
                 dt=datetime.now()
                 writer.writerow([username,dt.year,dt.month,dt.day,dt.hour,dt.minute,dt.second])
             print(f'Inloggad som {username}: ')
-            usermenu = input("""Välj ett alternative:
-                        1. Posta Meddelande 
-                        2. Söka Meddelende 
-                        3. Uppdatera mitt konto
-                        3. Logga ut \n """)
-            if usermenu == '1':
-                pass
-            elif usermenu == '2':
-                pass
-            elif usermenu == '3':
-                pass
-            elif usermenu == '4':
-                break
-            else:
-                print('Ogiltig Val!')
+            while True:
+                usermenu = input("""Välj ett alternative:
+                            1. Posta Meddelande 
+                            2. Söka Meddelende 
+                            3. Uppdatera mitt konto
+                            4. Logga ut \n """)
+                if usermenu == '1':
+                    title = get_nonempty_input("rubrik")
+                    message = get_nonempty_input("meddelande")
+                    images = input("bild")
+                    videos = input("video")
+                    links = []
+                    while True:
+                        print('Skriv avsluta för att slutföra tillägget!')
+                        link = get_nonempty_input("länk")
+                        if link == 'avsluta':
+                            #post
+                            print(links)
+                            break
+                        else:
+                            links.append(link)
+                    
+                    
+
+                elif usermenu == '2':
+                    pass
+                elif usermenu == '3':
+                    pass
+                elif usermenu == '4':
+                    return
+                else:
+                    print('Ogiltig Val!')
         else:
             print("Autentisering misslyckades! Försök igen!")
 
