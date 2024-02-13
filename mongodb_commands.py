@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+# import pprint
 
 client = MongoClient("mongodb://localhost:27017/")
 db = client.wall
@@ -7,3 +8,10 @@ collection = db.post
 
 def create_post(post):
     collection.insert_one(post)
+
+
+def read_posts(username):
+    return list(collection.find({'username':username},{'_id':0,'username':0}))
+
+# if __name__ == '__main__':
+#     pprint.pprint(list(read_posts('c')))

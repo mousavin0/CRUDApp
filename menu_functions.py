@@ -11,7 +11,34 @@ import bcrypt
 
 import csv
 
-from mongodb_commands import create_post
+from mongodb_commands import create_post,read_posts
+
+
+from sqlite_commands import prepare_relational_database
+from helper_functions import prepare_log_files
+
+#to print out posts in a readable way
+from pprint import pprint
+
+def main_menu():
+    prepare_relational_database()
+    prepare_log_files()
+    while True:
+        menu = input("""Välj ett alternative:
+                     1. Bli medlem 
+                     2. Logga in 
+                     3. Stäng Appen! \n """)
+
+        if menu == '1':
+            create_account_menu()
+        elif menu == '2':
+            login_menu()
+        elif menu == '3':
+            break
+        else:
+            print("Ingen gilgit inmatning! Försök igen!") 
+
+
 
 def login_menu():
     while True:
@@ -32,7 +59,7 @@ def login_menu():
                 if usermenu == '1':
                     create_post_menu(username)
                 elif usermenu == '2':
-                    pass
+                    find_posts_menu()
                 elif usermenu == '3':
                     pass
                 elif usermenu == '4':
@@ -82,3 +109,13 @@ def create_post_menu(username):
             break
         else:
             links.append(link)
+
+
+def find_posts_menu():
+    username = input('Ange ett användernamn: ')
+    posts = read_posts(username)
+    if posts:
+        pprint(posts)
+    else:
+        print('Ingen meddelande hittades!')
+    
