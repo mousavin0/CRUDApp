@@ -24,7 +24,7 @@ def main_menu():
     prepare_relational_database()
     prepare_log_files()
     while True:
-        menu = input("""Välj ett alternative:
+        menu = input("""*****Välkommen till hemsida! Välj ett alternative:*****
                      1. Bli medlem 
                      2. Logga in 
                      3. Stäng Appen! \n """)
@@ -36,11 +36,12 @@ def main_menu():
         elif menu == '3':
             break
         else:
-            print("Ingen gilgit inmatning! Försök igen!") 
+            print("*****Ingen gilgit inmatning! Försök igen!*****") 
 
 
 
 def login_menu():
+    print('*****Logga in*****')
     while True:
         username = get_nonempty_input("användarnamn")
         password = get_nonempty_input("lösenord",is_password=True)
@@ -49,7 +50,7 @@ def login_menu():
                 writer = csv.writer(f)
                 dt=datetime.now()
                 writer.writerow([username,dt.year,dt.month,dt.day,dt.hour,dt.minute,dt.second])
-            print(f'Inloggad som {username}: ')
+            print(f'*****Inloggad som {username}*****')
             while True:
                 usermenu = input("""Välj ett alternative:
                             1. Posta Meddelande 
@@ -65,17 +66,18 @@ def login_menu():
                 elif usermenu == '4':
                     return
                 else:
-                    print('Ogiltig Val!')
+                    print('*****Ogiltig Val!*****')
         else:
-            print("Autentisering misslyckades! Försök igen!")
+            print("*****Autentisering misslyckades! Försök igen!*****")
 
 def create_account_menu():
+    print('*****Skapa ett konto*****')
     firstname = get_nonempty_input("förnamn")
     lastname = get_nonempty_input("efternamn")
     while True:
         username = get_nonempty_input("användarnamn")
         if not is_username_unique(username):
-            print("Användarnamnet är redan upptaget. Välj en annan.")
+            print("*****Användarnamnet är redan upptaget. Välj en annan.*****")
         else:
             break
     password = get_nonempty_input("lösenord",is_password=True)
@@ -117,5 +119,5 @@ def find_posts_menu():
     if posts:
         pprint(posts)
     else:
-        print('Ingen meddelande hittades!')
+        print('*****Ingen meddelande hittades!*****')
     
