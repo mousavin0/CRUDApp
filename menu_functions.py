@@ -1,7 +1,7 @@
 from helper_functions import get_nonempty_input,prepare_log_files
 from sqlite_commands import add_user, is_username_unique, user_exists, update_user,prepare_relational_database
 from constants import login_log_file, field_sv_to_column_name
-from mongodb_commands import create_post,read_posts
+from mongodb_commands import create_post,read_posts, get_message_count
 
 from datetime import datetime
 
@@ -52,7 +52,8 @@ def login_menu():
                             1. Posta Meddelande 
                             2. Söka Meddelende 
                             3. Uppdatera mitt konto
-                            4. Logga ut \n """)
+                            4. Få antalet mina meddelanden
+                            5. Logga ut \n """)
                 if usermenu == '1':
                     create_post_menu(username)
                 elif usermenu == '2':
@@ -60,6 +61,9 @@ def login_menu():
                 elif usermenu == '3':
                     update_user_menu(username)
                 elif usermenu == '4':
+                    messagecount = get_message_count(username)
+                    print(f'Du har postat {messagecount} meddelande(n)')
+                elif usermenu == '5':
                     return
                 else:
                     print('*****Ogiltig Val!*****')
@@ -110,8 +114,9 @@ def create_post_menu(username):
 
 
 def find_posts_menu():
-    username = input('Ange ett användernamn: ')
-    posts = read_posts(username)
+    print('*****Söka på en titel*****')
+    title = input('Sökord: ')
+    posts = read_posts(title)
     if posts:
         pprint(posts)
     else:
