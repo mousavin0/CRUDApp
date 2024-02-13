@@ -1,8 +1,7 @@
-from helper_functions import get_nonempty_input
-from sqlite_commands import add_user
-from sqlite_commands import is_username_unique
-from sqlite_commands import user_exists
-from constants import login_log_file
+from helper_functions import get_nonempty_input,prepare_log_files
+from sqlite_commands import add_user, is_username_unique, user_exists, update_user,prepare_relational_database
+from constants import login_log_file, field_sv_to_column_name
+from mongodb_commands import create_post,read_posts
 
 from datetime import datetime
 
@@ -11,11 +10,8 @@ import bcrypt
 
 import csv
 
-from mongodb_commands import create_post,read_posts
 
 
-from sqlite_commands import prepare_relational_database
-from helper_functions import prepare_log_files
 
 #to print out posts in a readable way
 from pprint import pprint
@@ -62,7 +58,7 @@ def login_menu():
                 elif usermenu == '2':
                     find_posts_menu()
                 elif usermenu == '3':
-                    pass
+                    update_user_menu(username)
                 elif usermenu == '4':
                     return
                 else:
@@ -121,3 +117,24 @@ def find_posts_menu():
     else:
         print('*****Ingen meddelande hittades!*****')
     
+
+def update_user_menu(username):
+    while True:
+        print('*****Konto Uppdatering*****')
+        field = input("""Skriv namnet på fältet som du vill uppdatera. Välj mellan:
+                                   lösenord, förnamn,efternamn, adress, telefonnummer: """)
+        if field in ('lösenord', 'förnamn',
+                                    'efternamn', 'adress', 'telefonnummer'):
+            break
+        else:
+            print('*****Ogiltig fält!*****')
+    if field == 'adress' or field == 'telefonnummer':
+        new_value = input(f'Ange ditt nya {field}')
+    else:
+        new_value = get_nonempty_input('nya '+ field, is_password= (field == 'lösenord'))
+    
+    if field == 'lösenord':
+        new_value = bcrypt.hashpw(new_value.encode('utf-8'), bcrypt.gensalt())
+
+    update_user(username,field_sv_to_column_name[field],new_value)
+    print('*****Ditt konto har uppdateras!*****')

@@ -67,7 +67,22 @@ def is_username_unique(username):
         return False
     return True
 
-# if __name__=="__main__":
-#     print(bcrypt.hashpw('d'.encode('utf-8'), bcrypt.gensalt()))
-#     print(user_exists('c','d'))
-#     print(user_exists('c','e'))
+def update_user(username,field,new_value):
+    userid = get_user_id(username)
+    sql_query = f'UPDATE users SET {field} = ? WHERE user_id = ?'
+    values = (new_value,userid)
+    run_CUD_statements(sql_query,values)
+
+
+def get_user_id(username):
+    sql_query = """ SELECT user_id FROM users WHERE username = ?"""
+    values = (username,)
+    user_id_query_results = run_READ_statements(sql_query,values)
+    user_id = user_id_query_results[0]
+    return user_id
+
+
+
+if __name__=="__main__":
+    print(update_user('c','firstname','aa'))
+    #print(get_user_id('c'))
