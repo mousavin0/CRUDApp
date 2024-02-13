@@ -39,7 +39,7 @@ def run_READ_statements(query,values,print_statement=''):
 
     cursor.close()
     conn.close()
-    return result[0]
+    return result
 
 def add_user(firstname,lastname,username,password_hash,address,telephone):
     sql_query = """ INSERT INTO users (firstname,lastname,username,password_hash,address,telephone) VALUES (?,?,?,?,?,?)"""
@@ -49,9 +49,11 @@ def add_user(firstname,lastname,username,password_hash,address,telephone):
 def user_exists(username,password):
     sql_query = """ SELECT password_hash FROM users WHERE username = ?"""
     values = (username,)
-    true_passowrd_hashed = run_READ_statements(sql_query,values)
-    if bcrypt.checkpw(password.encode('utf-8'),true_passowrd_hashed):
-        return True
+    true_passowrd_hashed_query_results = run_READ_statements(sql_query,values)
+    if true_passowrd_hashed_query_results:
+        true_passowrd_hashed = true_passowrd_hashed_query_results[0]
+        if bcrypt.checkpw(password.encode('utf-8'),true_passowrd_hashed):
+            return True
     return False
 
 

@@ -46,7 +46,7 @@ def create_account_menu():
     firstname = get_nonempty_input("förnamn")
     lastname = get_nonempty_input("efternamn")
     while True:
-        username = get_nonempty_input("användarnamn: ")
+        username = get_nonempty_input("användarnamn")
         if not is_username_unique(username):
             print("Användarnamnet är redan upptaget. Välj en annan.")
         else:
