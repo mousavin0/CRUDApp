@@ -58,6 +58,11 @@ def user_exists(username,password):
 
 
 def is_username_unique(username):
+    sql_query = """ SELECT user_id FROM users WHERE username = ?"""
+    values = (username,)
+    user_id = run_READ_statements(sql_query,values)
+    if user_id:
+        return False
     return True
 
 # if __name__=="__main__":
