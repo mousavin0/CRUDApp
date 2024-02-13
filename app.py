@@ -15,6 +15,8 @@ from openpyxl import Workbook
 from datetime import datetime
 
 
+from mongodb_commands import create_post
+
 
 
 login_log_file = 'user_login.csv'
@@ -34,7 +36,7 @@ def get_nonempty_input(fieldname, is_password=False):
             print(f'{fieldname} får inte vara tom.')
 
 
-def login():
+def login_menu():
     while True:
         username = get_nonempty_input("användarnamn")
         password = get_nonempty_input("lösenord",is_password=True)
@@ -51,23 +53,7 @@ def login():
                             3. Uppdatera mitt konto
                             4. Logga ut \n """)
                 if usermenu == '1':
-                    title = get_nonempty_input("rubrik")
-                    message = get_nonempty_input("meddelande")
-                    images = input("bild")
-                    videos = input("video")
-                    links = []
-                    while True:
-                        print('Skriv avsluta för att slutföra tillägget!')
-                        link = get_nonempty_input("länk")
-                        if link == 'avsluta':
-                            #post
-                            print(links)
-                            break
-                        else:
-                            links.append(link)
-                    
-                    
-
+                    create_post_menu(username)
                 elif usermenu == '2':
                     pass
                 elif usermenu == '3':
@@ -79,7 +65,7 @@ def login():
         else:
             print("Autentisering misslyckades! Försök igen!")
 
-def create_account():
+def create_account_menu():
     firstname = get_nonempty_input("förnamn")
     lastname = get_nonempty_input("efternamn")
     while True:
@@ -94,6 +80,31 @@ def create_account():
 
     password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     add_user(firstname,lastname,username,password_hash,address,telephone)
+
+
+def create_post_menu(username):
+    post_dic = {}
+    post_dic['username'] = username
+    post_dic['title'] = get_nonempty_input("rubrik")
+    post_dic['message'] = get_nonempty_input("meddelande")
+    image = input("Ange din bild: ")
+    video = input("Ange din video: ")
+    if image:
+        post_dic['image'] = image
+    if video:
+        post_dic['video'] = video
+    links = []
+    while True:
+        print('Skriv \'avsluta\' eller tryck bara på enter för att slutföra tillägget!')
+        link = input("Ange din länk: ")
+        if link == 'avsluta' or not link:
+            #post
+            if links:
+                post_dic['links'] = links
+            create_post(post_dic)
+            break
+        else:
+            links.append(link)
 
 
 def prepare_log_files():
@@ -124,9 +135,9 @@ if __name__ == "__main__":
                      3. Stäng Appen! \n """)
 
         if menu == '1':
-            create_account()
+            create_account_menu()
         elif menu == '2':
-            login()
+            login_menu()
         elif menu == '3':
             break
         else:
