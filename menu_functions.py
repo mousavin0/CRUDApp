@@ -1,5 +1,5 @@
-from helper_functions import get_nonempty_input,prepare_log_files
-from sqlite_commands import add_user, is_username_unique, user_exists, update_user,prepare_relational_database
+from helper_functions import append_to_log, get_nonempty_input
+from sqlite_commands import add_user, is_username_unique, user_exists, update_user,create_users_logins_tables, get_user_id
 from constants import login_log_file, field_sv_to_column_name
 from mongodb_commands import create_post,read_posts, get_message_count
 
@@ -17,8 +17,8 @@ import csv
 from pprint import pprint
 
 def main_menu():
-    prepare_relational_database()
-    prepare_log_files()
+    create_users_logins_tables()
+    # prepare_log_file()
     while True:
         menu = input("""*****Välkommen till hemsida! Välj ett alternative:*****
                      1. Bli medlem 
@@ -42,10 +42,7 @@ def login_menu():
         username = get_nonempty_input("användarnamn")
         password = get_nonempty_input("lösenord",is_password=True)
         if user_exists(username,password):
-            with open(login_log_file,'a') as f:    
-                writer = csv.writer(f)
-                dt=datetime.now()
-                writer.writerow([username,dt.year,dt.month,dt.day,dt.hour,dt.minute,dt.second])
+            append_to_log(username)
             print(f'*****Inloggad som {username}*****')
             while True:
                 usermenu = input("""Välj ett alternative:

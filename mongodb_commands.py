@@ -1,7 +1,8 @@
 from pymongo import MongoClient
+from constants import mongodb_url
 # import pprint
 
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient(mongodb_url)
 db = client.wall
 collection = db.post
 
@@ -15,7 +16,7 @@ def create_post(post):
 
 
 def read_posts(title):
-    return list(collection.find({'title':title},{'_id':0,'username':0}))
+    return list(collection.find({'title':title},{'_id':0}))
 
 
 def get_message_count(username):

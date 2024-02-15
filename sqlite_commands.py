@@ -1,8 +1,9 @@
 import sqlite3
 import bcrypt
-database_name = "users_data.db"
-def prepare_relational_database():
+from constants import database_name
+def create_users_logins_tables():
     conn = sqlite3.connect(database_name)
+    conn.execute("PRAGMA foreign_keys = 1")
     cursor = conn.cursor()
     cursor.execute("""CREATE TABLE IF NOT EXISTS users (
                    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -12,9 +13,25 @@ def prepare_relational_database():
                    password_hash TEXT NOT NULL,
                    address TEXT,
                    telephone TEXT )""")
+    
+    cursor.execute("""CREATE TABLE IF NOT EXISTS logins (
+                   login_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   user_id INTEGER NOT NULL,
+                   datetime TEXT NOT NULL,
+                   FOREIGN KEY (user_id) REFERENCES users(user_id)
+                   )""")
     conn.commit()
     cursor.close()
     conn.close()
+
+
+def add_login(user_id,datetime):
+    sql_query = """INSERT INTO logins (user_id, datetime) VALUES(?,?)"""
+    values = (user_id,datetime)
+    run_CUD_statements(sql_query,values)
+
+
+
 
 
 
