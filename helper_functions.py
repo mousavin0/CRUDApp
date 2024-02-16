@@ -9,12 +9,13 @@ import os
 import csv
 
 from openpyxl import Workbook
-from constants import login_log_file, login_history_file
+from constants import login_log_file, login_summary_file
 
 from datetime import datetime
 
+from sqlite_commands import add_login, get_user_id, get_login_summary
 
-from sqlite_commands import get_user_id
+from openpyxl import load_workbook
 
 def get_nonempty_input(fieldname, is_password=False):
     prompt = f'Ange ditt {fieldname}: '
@@ -49,8 +50,22 @@ def prepare_log_file():
             writer.writerow(header)
 
 
-# def prepare_history_file():
-#         if not os.path.exists(login_history_file):
+def prepare_summary_file():
+        if not os.path.exists(login_summary_file):
+            wb = Workbook()
+            ws = wb.active
+            ws['A1'] = 'number_of_logins'
+            ws['B1'] = 'year'
+            ws['C1'] = 'month'
+            ws['D1'] = 'day'
+            ws['E1'] = 'hour'
+            wb.save(login_summary_file)
+            wb.close()
+
+
+# def append_to_summary(rows):
+#         for row in rows:
+#         if not os.path.exists(login_summary_file):
 #             wb = Workbook()
 #             ws = wb.active
 #             ws['A1'] = 'number_of_logins'
@@ -58,5 +73,28 @@ def prepare_log_file():
 #             ws['C1'] = 'month'
 #             ws['D1'] = 'day'
 #             ws['E1'] = 'hour'
-#             wb.save(login_history_file)
+#             wb.save(login_summary_file)
+
+
+
+
+def read_from_log_file_write_to_table():
+    prepare_log_file()
+    with open(login_log_file,'r') as f:
+        reader_obj = csv.DictReader(f) 
+        for row in reader_obj: 
+            user_id = int(row['user_id'])
+            add_login(user_id,int(row['year']),int(row['month']),int(row['day']),
+                            int(row['hour']),int(row['minute']),int(row['second']))
+            
+
+def update_summary_file():
+    prepare_summary_file()
+    wb = load_workbook(login_summary_file)
+    ws = wb.worksheets[0]
+    for row in get_login_summary():
+        ws.append(row)
+
+    wb.save(login_summary_file)
+    wb.close()
 

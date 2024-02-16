@@ -17,7 +17,12 @@ def create_users_logins_tables():
     cursor.execute("""CREATE TABLE IF NOT EXISTS logins (
                    login_id INTEGER PRIMARY KEY AUTOINCREMENT,
                    user_id INTEGER NOT NULL,
-                   datetime TEXT NOT NULL,
+                   year INTEGER NOT NULL,
+                   month INTEGER NOT NULL,
+                   day INTEGER NOT NULL,
+                   hour INTEGER NOT NULL,
+                   minute INTEGER NOT NULL,
+                   second INTEGER NOT NULL,
                    FOREIGN KEY (user_id) REFERENCES users(user_id)
                    )""")
     conn.commit()
@@ -25,9 +30,17 @@ def create_users_logins_tables():
     conn.close()
 
 
-def add_login(user_id,datetime):
-    sql_query = """INSERT INTO logins (user_id, datetime) VALUES(?,?)"""
-    values = (user_id,datetime)
+
+def get_login_summary():
+    sql_query = """SELECT count(login_id) as number_of_logins, year, month, day, hour FROM logins GROUP BY hour"""
+    result = run_READ_statements_fetch_all(sql_query)
+    return result
+
+
+
+def add_login(user_id,year, month,day,hour,minute,second):
+    sql_query = """INSERT INTO logins (user_id, year, month,day,hour,minute,second) VALUES(?,?,?,?,?,?,?)"""
+    values = (user_id,year, month,day,hour,minute,second)
     run_CUD_statements(sql_query,values)
 
 
@@ -43,7 +56,7 @@ def run_CUD_statements(query,values,print_statement=''):
     cursor.close()
     conn.close()
 
-def run_READ_statements(query,values,print_statement=''):
+def run_READ_statements_fetch_one(query,values,print_statement=''):
     conn = sqlite3.connect(database_name)
     cursor = conn.cursor()
     cursor.execute(query,values)
@@ -58,6 +71,18 @@ def run_READ_statements(query,values,print_statement=''):
     conn.close()
     return result
 
+
+def run_READ_statements_fetch_all(query):
+    conn = sqlite3.connect(database_name)
+    cursor = conn.cursor()
+    cursor.execute(query)
+    conn.commit()
+    result = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return result
+
 def add_user(firstname,lastname,username,password_hash,address,telephone):
     sql_query = """ INSERT INTO users (firstname,lastname,username,password_hash,address,telephone) VALUES (?,?,?,?,?,?)"""
     values = (firstname,lastname,username,password_hash,address,telephone)
@@ -66,7 +91,7 @@ def add_user(firstname,lastname,username,password_hash,address,telephone):
 def user_exists(username,password):
     sql_query = """ SELECT password_hash FROM users WHERE username = ?"""
     values = (username,)
-    true_passowrd_hashed_query_results = run_READ_statements(sql_query,values)
+    true_passowrd_hashed_query_results = run_READ_statements_fetch_one(sql_query,values)
     if true_passowrd_hashed_query_results:
         true_passowrd_hashed = true_passowrd_hashed_query_results[0]
         if bcrypt.checkpw(password.encode('utf-8'),true_passowrd_hashed):
@@ -79,7 +104,7 @@ def user_exists(username,password):
 def is_username_unique(username):
     sql_query = """ SELECT user_id FROM users WHERE username = ?"""
     values = (username,)
-    user_id = run_READ_statements(sql_query,values)
+    user_id = run_READ_statements_fetch_one(sql_query,values)
     if user_id:
         return False
     return True
@@ -94,7 +119,7 @@ def update_user(username,field,new_value):
 def get_user_id(username):
     sql_query = """ SELECT user_id FROM users WHERE username = ?"""
     values = (username,)
-    user_id_query_results = run_READ_statements(sql_query,values)
+    user_id_query_results = run_READ_statements_fetch_one(sql_query,values)
     user_id = user_id_query_results[0]
     return user_id
 
